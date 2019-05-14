@@ -2,7 +2,17 @@
 
 using namespace std;
 
-int main() {
-    cout << "Hello" << endl;
+void taisykles()
+{
+}
+
+
+int main()
+{
+    cout << "Zaidimo pavadinimas-------" << endl;
+
+
+
+
     return 0;
 }
