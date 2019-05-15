@@ -9,10 +9,18 @@ void taisykles()
 
 int main()
 {
-    cout << "Zaidimo pavadinimas-------" << endl;
-
-
-
-
+	cout << " ------------------------- SAVE THE EARTH ------------------------- " << endl;
+	cout << " -                   * * *                                        - " << endl;
+	cout << " -                 *       *                  #                   - " << endl;
+	cout << " -               *          *                 #                   - " << endl;
+	cout << " -             *             *               # #    #             - " << endl;
+	cout << " -            *             *      @     #### # #####             - " << endl;
+	cout << " -             *         *                   # #    #             - " << endl;
+	cout << " -              *        *                    #                   - " << endl;
+	cout << " -                *    *                      #                   - " << endl;
+	cout << " -                  *                                             - " << endl;
+	cout << " ------------------------------------------------------------------ " << endl;
+	cout << "belekas" << endl;
+	cout <<" ŽAIDIMO TAISYKLES " << endl;
     return 0;
 }
