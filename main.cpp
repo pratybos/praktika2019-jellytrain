@@ -71,30 +71,10 @@ void DrawWindowFrame(int a_x, int a_y, int b_x, int b_y)
 	gotoxy(a_x, b_y); printf("%c", 200);
 	gotoxy(b_x, b_y); printf("%c", 188);
 }
-void DrawSpaceShipInfo()
-{
-	gotoxy(5, 1); printf("   ");
-
-
-	for(int i = 0; i < hp; i++)
-	{
-		gotoxy(5 + i, 1); printf("%c",3);
-	}
-	
-	gotoxy(23,1); printf("     ");
-	
-	for(int i = 0; i < energy; i++)
-	{
-		gotoxy(23 + i ,1); printf("%c",222);
-	}
-}
-
 
 void DrawGameLimits()
 {//nupesia zaidimo limitus, ten kur reikia, o ko nereikia nepiesia
 	DrawWindowFrame(1,2,79,23);
-	DrawSpaceShipInfo();
-	
 	gotoxy(2,1); printf("HP:");
 	gotoxy(16,1); printf("Energy:");
 	gotoxy(50,1); printf("SCORE:");
@@ -120,7 +100,7 @@ void GameOverDefeatMessage()
 	int b_x = a_x + 23;
 	int b_y = a_y + 4;
 	DrawWindowFrame(a_x,a_y,b_x,b_y);
-	gotoxy(a_x+1,a_y+2); printf("      DEFEAT!!!");
+	gotoxy(a_x+1,a_y+2); printf("      You lost...");
 }
 
 void GameOverVictoryMessage()
@@ -130,7 +110,7 @@ void GameOverVictoryMessage()
 	int b_x = a_x + 23;
 	int b_y = a_y + 4;
 	DrawWindowFrame(a_x,a_y,b_x,b_y);
-	gotoxy(a_x+1,a_y+2); printf("      VICTORY!!!");
+	gotoxy(a_x+1,a_y+2); printf("LEVEL DONE");
 }
 
 class SpaceShip
@@ -144,6 +124,12 @@ public:
 	int Y() {return y;}
 	int HP() {return hp;}
 
+bool isDead()
+{
+	DrawSpaceShipInfo();
+	return imDead;
+}
+
 
 SpaceShip(int _x, int _y)
 {
@@ -152,11 +138,20 @@ SpaceShip(int _x, int _y)
 	imDead = false; //pradzioje neesame mire, o gyvi
 }
 
+void DrawSpaceShipInfo()
+{
+	gotoxy(5, 1); printf("   ");
+	gotoxy(5, 1); cout << hp << endl;
+	gotoxy(23,1); printf("     ");
+	gotoxy(23,1); cout << energy << endl;
+}
+
+
 void Draw()
 {//musu laivas
-	gotoxy(x,y);		printf( "  %c  ", 30);
-	gotoxy(x,y + 1);	printf( "  %c  ", 4);
-	gotoxy(x,y + 2);    printf("%c%c%c%c%c",17, 30, 223, 30, 16);
+	gotoxy(x,y);		printf( "  %c  ", 223);
+	gotoxy(x,y + 1);	printf( "  %c  ", 223);
+	gotoxy(x,y + 2);    printf("%c%c%c%c%c",223, 223, 223, 223, 223);
 }
 
 void Erase()
@@ -202,7 +197,7 @@ void Explosion()
 	Sleep(100);
 	if(hp > 0)
 	{
-		energy = 5;
+		energy = 1;
 	}
 	else
 	{
@@ -342,6 +337,8 @@ void GameLevel1(bool levels[])
  	Sleep(2000);
  	system("CLS");
  	DrawGameLimits();
+
+
 	list<Bullet*> Bullets;
 	list<Bullet*>::iterator bullet;
 
@@ -356,7 +353,7 @@ void GameLevel1(bool levels[])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(score != 2)
+	while(!ss.isDead() && score != 10)
 	{
 
 		if(kbhit())
@@ -384,10 +381,11 @@ void GameLevel1(bool levels[])
 		{
 			for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
 			{
-				int astX = (*asteroid)->X();//asteroido kordinates
-				int astY = (*asteroid)->Y();
-				int bulX = (*bullet)->X();
-				int bulY = (*bullet)->Y();
+				int astX = (*asteroid)->X();//asteroido X kordinate
+				int astY = (*asteroid)->Y();//asteroido Y kordinate
+				int bulX = (*bullet)->X();//asteroido X kordinate
+				int bulY = (*bullet)->Y();//asteroido Y kordinate
+
 				if((astX == bulX) && ((astY == bulY) || (astY + 1 == bulY)))
 				{
 					gotoxy(bulX,bulY); printf(" ");
@@ -405,18 +403,19 @@ void GameLevel1(bool levels[])
 		gotoxy(56,1); printf("%d", score);
 		Sleep(100);
 	}
-	if(score == 2)
+	if(!ss.isDead())
 	{
 		GameOverVictoryMessage();
-		Sleep(1000);
+		Sleep(5000);
 		system("CLS");
 		menu();
 	}
-	else if(hp == 0)
+	else
 	{
 		GameOverDefeatMessage();
+		Sleep(5000);
 		system("CLS");
-		menu();
+		exit(0);
 	}
 }
 
@@ -447,7 +446,7 @@ void GameLevel2(bool levels[])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(score != 6)
+	while(!ss.isDead() && score != 20)
 	{
 
 		if(kbhit())
@@ -496,19 +495,19 @@ void GameLevel2(bool levels[])
 		gotoxy(56,1); printf("%d", score);
 		Sleep(80);
 	}
-	if(score == 6)
+	if(!ss.isDead())
 	{
-		bool levels[2] = {true};
 		GameOverVictoryMessage();
-		Sleep(1000);
+		Sleep(5000);
 		system("CLS");
 		menu();
 	}
-	else if(hp == 0)
+	else
 	{
 		GameOverDefeatMessage();
+		Sleep(5000);
 		system("CLS");
-		menu();
+		exit(0);
 	}
 }
 void GameLevel3(bool levels[])
@@ -538,7 +537,7 @@ void GameLevel3(bool levels[])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(score != 9)
+	while(!ss.isDead() && score != 40)
 	{
 
 		if(kbhit())
@@ -587,19 +586,20 @@ void GameLevel3(bool levels[])
 		gotoxy(56,1); printf("%d", score);
 		Sleep(60);
 	}
-	if(score == 9)
+	if(!ss.isDead())
 	{
 
 		GameOverVictoryMessage();
-		Sleep(1000);
+		Sleep(5000);
 		system("CLS");
 		menu();
 	}
-	else if(hp == 0)
+	else
 	{
 		GameOverDefeatMessage();
+		Sleep(5000);
 		system("CLS");
-		menu();
+		exit(0);
 	}
 }
 void GameLevel4(bool levels[])
@@ -629,7 +629,7 @@ void GameLevel4(bool levels[])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(score != 12)
+	while(!ss.isDead() && score != 60)
 	{
 
 		if(kbhit())
@@ -678,18 +678,19 @@ void GameLevel4(bool levels[])
 		gotoxy(56,1); printf("%d", score);
 		Sleep(40);
 	}
-	if(score == 12)
+	if(!ss.isDead())
 	{
 		GameOverVictoryMessage();
-		Sleep(1000);
+		Sleep(5000);
 		system("CLS");
 		menu();
 	}
-	else if(hp == 0)
+	else
 	{
 		GameOverDefeatMessage();
+		Sleep(5000);
 		system("CLS");
-		menu();
+		exit(0);
 	}
 }
 
@@ -720,7 +721,7 @@ void GameLevel5(bool levels[5])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(score != 15)
+	while(!ss.isDead() && score != 100)
 	{
 
 		if(kbhit())
@@ -769,25 +770,31 @@ void GameLevel5(bool levels[5])
 		gotoxy(56,1); printf("%d", score);
 		Sleep(30);
 	}
-	if(score == 15)
+	if(!ss.isDead())
 	{
 		GameOverVictoryMessage();
-		Sleep(1000);
+		Sleep(5000);
 		system("CLS");
 		menu();
 	}
-	else if(hp == 0)
+	else
 	{
 		GameOverDefeatMessage();
+		Sleep(5000);
 		system("CLS");
-		menu();
+		exit(0);
 	}
+}
+
+void map()
+{
 }
 
 
 
 int main()
 {
+	int a = 1;
 	HideCursor();
 	WelcomeMessage();
 	getch();
@@ -797,11 +804,18 @@ int main()
 
 	system("CLS");
 
+	if(hp == 0)
+	{
+		cout << "You've lost the game!!" << endl;
+	}
+	else
+	{
 	menu();
-
+	}
 	system("CLS");
 
-while(true){
+while(a == 1)
+{
 	if(pasirinkimas == 1 )
 	{
 		system("CLS");
