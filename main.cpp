@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <list>
 #include <iostream>
+#include <fstream>
 
 
 using namespace std;
@@ -14,11 +15,16 @@ using namespace std;
 #define DOWN 80
 
 string vardas;
+int a;
+int b;
+string line;
 int pasirinkimas;
 int store;
 int hp = 3;
 int energy = 5;
 int score;
+
+
 
 bool levels[5] = {false,false,false,false,false};
 
@@ -110,7 +116,7 @@ void GameOverVictoryMessage()
 	int b_x = a_x + 23;
 	int b_y = a_y + 4;
 	DrawWindowFrame(a_x,a_y,b_x,b_y);
-	gotoxy(a_x+1,a_y+2); printf("LEVEL DONE");
+	gotoxy(a_x+1,a_y+2); printf("       LEVEL DONE");
 }
 
 class SpaceShip
@@ -149,9 +155,24 @@ void DrawSpaceShipInfo()
 
 void Draw()
 {//musu laivas
+	if(a == 1)
+	{
+		gotoxy(x,y);		printf( "  %c  ", 178);
+		gotoxy(x,y + 1);	printf( "  %c  ", 178);
+		gotoxy(x,y + 2);    printf("%c%c%c%c%c",178, 178, 178, 178, 178);
+	}
+	else if(a==2)
+	{
+	gotoxy(x,y);		printf( "  %c  ", 176);
+	gotoxy(x,y + 1);	printf( "  %c  ", 176);
+	gotoxy(x,y + 2);    printf("%c%c%c%c%c",176, 176, 176, 176, 176);
+	}
+	else
+	{
 	gotoxy(x,y);		printf( "  %c  ", 223);
 	gotoxy(x,y + 1);	printf( "  %c  ", 223);
 	gotoxy(x,y + 2);    printf("%c%c%c%c%c",223, 223, 223, 223, 223);
+	}
 }
 
 void Erase()
@@ -216,6 +237,8 @@ void Move()
 			case RIGHT: if(x + 4 < 77) 	x += 1; break;
 			case UP: 	if(y > 3)		y -= 1; break;
 			case DOWN: 	if(y + 2 < 22)	y += 1; break;
+			default:
+				break;
 		}
 	}
 	Draw();//Nupesia laiva nepaisant ar jis pajudejo ar ne
@@ -303,25 +326,80 @@ void story(string vardas)
 {
 	cout << "Welcome!!!!" << endl;
 	cout << "You must be..." << endl;
-	cout << "Enter your name: " << endl;
 	cin >> vardas;
+
+	system("cls");
 
 	cout << vardas << " we need your help saving the earth and other planets!!!" << endl;
 	cout << "We've been under atack from outer space with asteroid!!" << endl;
 	cout << "That why we need your help with defending the planets!!!!" << endl;
+	cout << "You have to travel from Neptune, to Saturn,to Jupiter, to Mars and las to Earth" << endl;
+	cout << "I wish you good luck on this jorney for the sake of planets!!!!" << endl;
 	Sleep(2000);
 }
 
 void menu()
 {
 	cout << "You have: health points " << hp << " score: " << score << " energy: " << energy << " " << endl; 
-	menu:
 	cout << "1. Start the game." << endl;
 	cout << "2. Store." << endl;
-	cout << "3. Map." << endl;
+	cout << "3. Score Board." << endl;
 	cout << "4. Exit." << endl;
 	cin >> pasirinkimas; 
 }
+
+void storylevel1()
+{
+	printf("The joyrney begins to save the earth!\n");
+	printf("This is Neptune, this is were you begin the joyrney\n");
+	printf("You have to get to the earth as fast as posible.\n");
+	printf("If you woun't make it, the earth will be gone,\n");
+	printf("We count on you, don't let us down\n");
+	Sleep(5000);
+}
+
+void storylevel2()
+{
+	printf("You made it to Saturn!!\n");
+	printf("Your next stop is Jupiter\n");
+	printf("DON'T LET US DOWN\n");
+	printf("WE TRUST YOU\n");
+	printf("We will give you some strenght\n");
+	printf("Accept our offers of help\n");
+	Sleep(2000);
+}
+
+void storylevel3()
+{
+	printf("You are half way there\n");
+	printf("You are now on Jupiter\n");
+	printf("The next planet is Mars\n");
+	printf("There is said, that there will be a lot of gifts for you\n");
+	printf("Don't waste your chance and go there\n");
+	Sleep(5000);
+}
+
+void storylevel4()
+{
+	printf("You are almost there!!!\n");
+	printf("You are on Mars\n");
+	printf("The next stop is final\n");
+	printf("Don't let us down!!!\n");
+	Sleep(5000);
+}
+
+
+
+void storylevel5()
+{
+	printf("This is the end, we need you to save everyone, that you can\n");
+	printf("We will need your help, this woun't be easy to beat, but..\n");
+	printf("But we count on you that you will save us all from asteroids\n");
+	printf("Good luck soldier, don't let us all down.\n");
+	Sleep(5000);
+
+}
+
 
 
 void GameLevel1(bool levels[])
@@ -335,8 +413,13 @@ void GameLevel1(bool levels[])
 	cout << ("                       LEVEL 1                          ") << endl;
 	cout << ("                                                        ") << endl;
  	Sleep(2000);
+
  	system("CLS");
- 	DrawGameLimits();
+
+ 	storylevel1();
+
+ 	system("CLS");
+
 
 
 	list<Bullet*> Bullets;
@@ -353,7 +436,8 @@ void GameLevel1(bool levels[])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(!ss.isDead() && score != 10)
+
+	while(!ss.isDead() && score != 5)
 	{
 
 		if(kbhit())
@@ -394,14 +478,15 @@ void GameLevel1(bool levels[])
 					bullet = Bullets.erase(bullet);
 					delete (*asteroid);
 					asteroid = Asteroids.erase(asteroid);
-					score++;
 					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
+					score++;
 				}
 			}
 		}
 		ss.Move();
 		gotoxy(56,1); printf("%d", score);
 		Sleep(100);
+		system("CLS");
 	}
 	if(!ss.isDead())
 	{
@@ -431,7 +516,12 @@ void GameLevel2(bool levels[])
 	cout << ("                                                        ") << endl;
  	Sleep(2000);
  	system("CLS");
- 	DrawGameLimits();
+
+ 	storylevel2();
+
+ 	system("CLS");
+
+
 	list<Bullet*> Bullets;
 	list<Bullet*>::iterator bullet;
 
@@ -439,6 +529,203 @@ void GameLevel2(bool levels[])
 	list<Asteroid*>::iterator asteroid;
 
 	for(int i = 0; i < 7; i++)
+	{
+		Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3));
+	}
+
+	SpaceShip ss = SpaceShip(40,20);
+
+
+	while(!ss.isDead() && score != 10)
+	{
+
+		if(kbhit())
+		{
+			char key = getch();
+			if(key == ' ')
+			{
+				Bullets.push_back(new Bullet(ss.X() + 2, ss.Y() - 1));
+			}
+		}
+		for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
+		{
+			(*bullet)->Move();
+			if((*bullet)->isOut())
+			{
+				delete (*bullet);
+				bullet = Bullets.erase(bullet);
+			}
+		}
+		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
+		{
+			(*asteroid)->Collision(ss);
+		}
+		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
+		{
+			for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
+			{
+				int astX = (*asteroid)->X();//asteroido kordinates
+				int astY = (*asteroid)->Y();
+				int bulX = (*bullet)->X();
+				int bulY = (*bullet)->Y();
+				if((astX == bulX) && ((astY == bulY) || (astY + 1 == bulY)))
+				{
+					gotoxy(bulX,bulY); printf(" ");
+					gotoxy(astX,astY); printf("X"); printf(" ");
+					delete (*bullet);
+					bullet = Bullets.erase(bullet);
+					delete (*asteroid);
+					asteroid = Asteroids.erase(asteroid);
+					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
+					score++;
+				}
+			}
+		}
+		ss.Move();
+		gotoxy(56,1); printf("%d", score);
+		Sleep(80);
+		system("CLS");
+	}
+	if(!ss.isDead())
+	{
+		GameOverVictoryMessage();
+		system("CLS");
+		if(score == 10)
+		{
+			cout << "You get double the points!!!" << endl;
+			score += 10;
+		}
+		Sleep(5000);
+		system("CLS");
+		menu();
+	}
+	else
+	{
+		GameOverDefeatMessage();
+		Sleep(5000);
+		system("CLS");
+		exit(0);
+	}
+}
+void GameLevel3(bool levels[])
+{
+	levels[3] = true;
+	cout << (" _____                    _____ _           _           ") << endl;
+	cout << ("|   __|___ ___ ___ ___   |   __| |_ ___ ___| |_ ___ ___ ") << endl;
+	cout << ("|__   | . | .'|  _| -_|  |__   |   | . | . |  _| -_|  _|") << endl;
+	cout << ("|_____|  _|__,|___|___|  |_____|_|_|___|___|_| |___|_|  ") << endl;
+	cout << ("      |_|") << endl;
+	cout << ("                       LEVEL 3                          ") << endl;
+	cout << ("                                                        ") << endl;
+ 	Sleep(2000);
+ 	system("CLS");
+
+ 	storylevel3();
+
+ 	system("cls");
+	list<Bullet*> Bullets;
+	list<Bullet*>::iterator bullet;
+
+	list<Asteroid*> Asteroids;
+	list<Asteroid*>::iterator asteroid;
+
+	for(int i = 0; i < 9; i++)
+	{
+		Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3));
+	}
+
+	SpaceShip ss = SpaceShip(40,20);
+
+
+	while(!ss.isDead() && score != 15)
+	{
+
+		if(kbhit())
+		{
+			char key = getch();
+			if(key == ' ')
+			{
+				Bullets.push_back(new Bullet(ss.X() + 2, ss.Y() - 1));
+			}
+		}
+		for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
+		{
+			(*bullet)->Move();
+			if((*bullet)->isOut())
+			{
+				delete (*bullet);
+				bullet = Bullets.erase(bullet);
+			}
+		}
+		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
+		{
+			(*asteroid)->Collision(ss);
+		}
+		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
+		{
+			for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
+			{
+				int astX = (*asteroid)->X();//asteroido kordinates
+				int astY = (*asteroid)->Y();
+				int bulX = (*bullet)->X();
+				int bulY = (*bullet)->Y();
+				if((astX == bulX) && ((astY == bulY) || (astY + 1 == bulY)))
+				{
+					gotoxy(bulX,bulY); printf(" ");
+					gotoxy(astX,astY); printf("X"); printf(" ");
+					delete (*bullet);
+					bullet = Bullets.erase(bullet);
+					delete (*asteroid);
+					asteroid = Asteroids.erase(asteroid);
+					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
+					score++;
+				}
+			}
+		}
+		ss.Move();
+		gotoxy(56,1); printf("%d", score);
+		Sleep(60);
+		system("CLS");
+	}
+	if(!ss.isDead())
+	{
+
+		GameOverVictoryMessage();
+		Sleep(5000);
+		system("CLS");
+		menu();
+	}
+	else
+	{
+		GameOverDefeatMessage();
+		Sleep(5000);
+		system("CLS");
+		exit(0);
+	}
+}
+void GameLevel4(bool levels[])
+{
+	levels[4] = true;
+	cout << (" _____                    _____ _           _           ") << endl;
+	cout << ("|   __|___ ___ ___ ___   |   __| |_ ___ ___| |_ ___ ___ ") << endl;
+	cout << ("|__   | . | .'|  _| -_|  |__   |   | . | . |  _| -_|  _|") << endl;
+	cout << ("|_____|  _|__,|___|___|  |_____|_|_|___|___|_| |___|_|  ") << endl;
+	cout << ("      |_|") << endl;
+	cout << ("                       LEVEL 4                          ") << endl;
+	cout << ("                                                        ") << endl;
+ 	Sleep(2000);
+ 	system("CLS");
+
+ 	storylevel4();
+
+ 	system("cls");
+	list<Bullet*> Bullets;
+	list<Bullet*>::iterator bullet;
+
+	list<Asteroid*> Asteroids;
+	list<Asteroid*>::iterator asteroid;
+
+	for(int i = 0; i < 10; i++)
 	{
 		Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3));
 	}
@@ -486,201 +773,27 @@ void GameLevel2(bool levels[])
 					bullet = Bullets.erase(bullet);
 					delete (*asteroid);
 					asteroid = Asteroids.erase(asteroid);
-					score++;
 					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
-				}
-			}
-		}
-		ss.Move();
-		gotoxy(56,1); printf("%d", score);
-		Sleep(80);
-	}
-	if(!ss.isDead())
-	{
-		GameOverVictoryMessage();
-		Sleep(5000);
-		system("CLS");
-		menu();
-	}
-	else
-	{
-		GameOverDefeatMessage();
-		Sleep(5000);
-		system("CLS");
-		exit(0);
-	}
-}
-void GameLevel3(bool levels[])
-{
-	levels[3] = true;
-	cout << (" _____                    _____ _           _           ") << endl;
-	cout << ("|   __|___ ___ ___ ___   |   __| |_ ___ ___| |_ ___ ___ ") << endl;
-	cout << ("|__   | . | .'|  _| -_|  |__   |   | . | . |  _| -_|  _|") << endl;
-	cout << ("|_____|  _|__,|___|___|  |_____|_|_|___|___|_| |___|_|  ") << endl;
-	cout << ("      |_|") << endl;
-	cout << ("                       LEVEL 3                          ") << endl;
-	cout << ("                                                        ") << endl;
- 	Sleep(2000);
- 	system("CLS");
- 	DrawGameLimits();
-	list<Bullet*> Bullets;
-	list<Bullet*>::iterator bullet;
-
-	list<Asteroid*> Asteroids;
-	list<Asteroid*>::iterator asteroid;
-
-	for(int i = 0; i < 9; i++)
-	{
-		Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3));
-	}
-
-	SpaceShip ss = SpaceShip(40,20);
-
-
-	while(!ss.isDead() && score != 40)
-	{
-
-		if(kbhit())
-		{
-			char key = getch();
-			if(key == ' ')
-			{
-				Bullets.push_back(new Bullet(ss.X() + 2, ss.Y() - 1));
-			}
-		}
-		for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
-		{
-			(*bullet)->Move();
-			if((*bullet)->isOut())
-			{
-				delete (*bullet);
-				bullet = Bullets.erase(bullet);
-			}
-		}
-		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
-		{
-			(*asteroid)->Collision(ss);
-		}
-		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
-		{
-			for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
-			{
-				int astX = (*asteroid)->X();//asteroido kordinates
-				int astY = (*asteroid)->Y();
-				int bulX = (*bullet)->X();
-				int bulY = (*bullet)->Y();
-				if((astX == bulX) && ((astY == bulY) || (astY + 1 == bulY)))
-				{
-					gotoxy(bulX,bulY); printf(" ");
-					gotoxy(astX,astY); printf("X"); printf(" ");
-					delete (*bullet);
-					bullet = Bullets.erase(bullet);
-					delete (*asteroid);
-					asteroid = Asteroids.erase(asteroid);
 					score++;
-					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
-				}
-			}
-		}
-		ss.Move();
-		gotoxy(56,1); printf("%d", score);
-		Sleep(60);
-	}
-	if(!ss.isDead())
-	{
-
-		GameOverVictoryMessage();
-		Sleep(5000);
-		system("CLS");
-		menu();
-	}
-	else
-	{
-		GameOverDefeatMessage();
-		Sleep(5000);
-		system("CLS");
-		exit(0);
-	}
-}
-void GameLevel4(bool levels[])
-{
-	levels[4] = true;
-	cout << (" _____                    _____ _           _           ") << endl;
-	cout << ("|   __|___ ___ ___ ___   |   __| |_ ___ ___| |_ ___ ___ ") << endl;
-	cout << ("|__   | . | .'|  _| -_|  |__   |   | . | . |  _| -_|  _|") << endl;
-	cout << ("|_____|  _|__,|___|___|  |_____|_|_|___|___|_| |___|_|  ") << endl;
-	cout << ("      |_|") << endl;
-	cout << ("                       LEVEL 4                          ") << endl;
-	cout << ("                                                        ") << endl;
- 	Sleep(2000);
- 	system("CLS");
- 	DrawGameLimits();
-	list<Bullet*> Bullets;
-	list<Bullet*>::iterator bullet;
-
-	list<Asteroid*> Asteroids;
-	list<Asteroid*>::iterator asteroid;
-
-	for(int i = 0; i < 10; i++)
-	{
-		Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3));
-	}
-
-	SpaceShip ss = SpaceShip(40,20);
-
-
-	while(!ss.isDead() && score != 60)
-	{
-
-		if(kbhit())
-		{
-			char key = getch();
-			if(key == ' ')
-			{
-				Bullets.push_back(new Bullet(ss.X() + 2, ss.Y() - 1));
-			}
-		}
-		for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
-		{
-			(*bullet)->Move();
-			if((*bullet)->isOut())
-			{
-				delete (*bullet);
-				bullet = Bullets.erase(bullet);
-			}
-		}
-		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
-		{
-			(*asteroid)->Collision(ss);
-		}
-		for(asteroid = Asteroids.begin(); asteroid != Asteroids.end(); asteroid++)
-		{
-			for(bullet = Bullets.begin(); bullet != Bullets.end(); bullet++)
-			{
-				int astX = (*asteroid)->X();//asteroido kordinates
-				int astY = (*asteroid)->Y();
-				int bulX = (*bullet)->X();
-				int bulY = (*bullet)->Y();
-				if((astX == bulX) && ((astY == bulY) || (astY + 1 == bulY)))
-				{
-					gotoxy(bulX,bulY); printf(" ");
-					gotoxy(astX,astY); printf("X"); printf(" ");
-					delete (*bullet);
-					bullet = Bullets.erase(bullet);
-					delete (*asteroid);
-					asteroid = Asteroids.erase(asteroid);
-					score++;
-					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
 				}
 			}
 		}
 		ss.Move();
 		gotoxy(56,1); printf("%d", score);
 		Sleep(40);
+		system("CLS");
 	}
 	if(!ss.isDead())
 	{
 		GameOverVictoryMessage();
+		system("CLS");
+		if(score == 20)
+		{
+			cout << "Job well done!" << endl;
+			cout << "More points" << endl;
+			score += 5;
+		}
+
 		Sleep(5000);
 		system("CLS");
 		menu();
@@ -706,7 +819,11 @@ void GameLevel5(bool levels[5])
 	cout << ("                                                        ") << endl;
  	Sleep(2000);
  	system("CLS");
- 	DrawGameLimits();
+
+ 	storylevel5();
+
+ 	system("cls");
+
 	list<Bullet*> Bullets;
 	list<Bullet*>::iterator bullet;
 
@@ -721,7 +838,7 @@ void GameLevel5(bool levels[5])
 	SpaceShip ss = SpaceShip(40,20);
 
 
-	while(!ss.isDead() && score != 100)
+	while(!ss.isDead() && score != 25)
 	{
 
 		if(kbhit())
@@ -761,14 +878,15 @@ void GameLevel5(bool levels[5])
 					bullet = Bullets.erase(bullet);
 					delete (*asteroid);
 					asteroid = Asteroids.erase(asteroid);
-					score++;
 					Asteroids.push_back(new Asteroid(rand()%78 + 1, rand()%4 + 3)); 
+					score++;
 				}
 			}
 		}
 		ss.Move();
 		gotoxy(56,1); printf("%d", score);
 		Sleep(30);
+		system("CLS");
 	}
 	if(!ss.isDead())
 	{
@@ -786,15 +904,13 @@ void GameLevel5(bool levels[5])
 	}
 }
 
-void map()
-{
-}
+
+
 
 
 
 int main()
 {
-	int a = 1;
 	HideCursor();
 	WelcomeMessage();
 	getch();
@@ -804,42 +920,61 @@ int main()
 
 	system("CLS");
 
-	if(hp == 0)
-	{
-		cout << "You've lost the game!!" << endl;
-	}
-	else
-	{
 	menu();
-	}
+
 	system("CLS");
 
-while(a == 1)
+while(true)
 {
 	if(pasirinkimas == 1 )
 	{
 		system("CLS");
 
-		if(levels[1] == false)
-		{
-			GameLevel1(levels);
-		}
-		else if(levels[2] == false)
-		{
-			GameLevel2(levels);
-		}
-		else if(levels[3] == false)
-		{
-			GameLevel3(levels);
-		}
-		else if(levels[4] == false)
-		{
-			GameLevel4(levels);
-		}
-		else if(levels[5] == false)
-		{
-			GameLevel5(levels);
-		}
+			if(!levels[1])
+			{
+				GameLevel1(levels);
+			}
+			else if(!levels[2])
+			{
+				cout << "Would you like to upgrade the ship?" << endl;
+				cout << "ITS COMPLETELY FREEEEEEEEE!!!!!" << endl;
+				cout << "1. yes. 2. no." << endl;
+				cin >> b;
+				if(b == 1)
+				{
+					a=1;
+					GameLevel2(levels);
+				}
+				else
+				{
+					GameLevel2(levels);
+				}
+			}
+			else if(!levels[3])
+			{
+				GameLevel3(levels);
+			}
+			else if(!levels[4])
+			{
+				cout << "Would you like to upgrade the ship?" << endl;
+				cout << "That will cost 10 score :(" << endl;
+				cout << "1. yes. 2. no." << endl;
+				cin >> b;
+				if(b==1)
+				{
+					a = 2;
+					score -= 10;
+					GameLevel4(levels);
+				}
+				else
+				{
+				GameLevel4(levels);
+				}
+			}
+			else if(!levels[5])
+			{
+				GameLevel5(levels);
+			}
 	}
 	else if(pasirinkimas == 2)
 	{
